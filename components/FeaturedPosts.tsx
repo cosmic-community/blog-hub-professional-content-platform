@@ -10,91 +10,91 @@ export default function FeaturedPosts({ posts }: FeaturedPostsProps) {
     return null;
   }
 
-  // Show up to 3 featured posts, skip the first one if it's already in hero
-  const displayPosts = posts.slice(1, 4);
-
-  if (displayPosts.length === 0) {
-    return null;
-  }
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {displayPosts.map((post) => (
-        <article
-          key={post.id}
-          className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200"
-        >
-          {post.metadata.featured_image && (
-            <div className="aspect-video overflow-hidden">
-              <Link href={`/posts/${post.slug}`}>
-                <img
-                  src={`${post.metadata.featured_image.imgix_url}?w=800&h=450&fit=crop&auto=format,compress`}
-                  alt={post.title}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
-                />
-              </Link>
-            </div>
-          )}
+      {posts.map((post) => {
+        // Add proper null/undefined checks for post properties
+        if (!post || !post.metadata) {
+          return null;
+        }
 
-          <div className="p-6">
-            {post.metadata.categories && post.metadata.categories.length > 0 && (
-              <div className="mb-3">
-                <Link
-                  href={`/categories/${post.metadata.categories[0].slug}`}
-                  className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
-                  style={{
-                    backgroundColor: post.metadata.categories[0].metadata.color + '20',
-                    color: post.metadata.categories[0].metadata.color,
-                  }}
-                >
-                  {post.metadata.categories[0].title}
-                </Link>
+        const { metadata } = post;
+        const featuredImage = metadata.featured_image;
+        const author = metadata.author;
+        const categories = metadata.categories;
+
+        return (
+          <article key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+            {featuredImage?.imgix_url && (
+              <div className="aspect-w-16 aspect-h-9">
+                <img
+                  src={`${featuredImage.imgix_url}?w=600&h=400&fit=crop&auto=format,compress`}
+                  alt={post.title}
+                  className="w-full h-48 object-cover"
+                />
               </div>
             )}
-
-            <h3 className="text-xl font-semibold text-gray-900 mb-3">
-              <Link
-                href={`/posts/${post.slug}`}
-                className="hover:text-primary-600 transition-colors duration-200"
-              >
-                {post.title}
-              </Link>
-            </h3>
-
-            {post.metadata.excerpt && (
-              <p className="text-gray-600 mb-4 line-clamp-3">
-                {post.metadata.excerpt}
-              </p>
-            )}
-
-            <div className="flex items-center justify-between text-sm text-gray-500">
-              {post.metadata.author && (
-                <Link
-                  href={`/authors/${post.metadata.author.slug}`}
-                  className="flex items-center space-x-2 hover:text-primary-600 transition-colors duration-200"
-                >
-                  {post.metadata.author.metadata.profile_picture && (
-                    <img
-                      src={`${post.metadata.author.metadata.profile_picture.imgix_url}?w=60&h=60&fit=crop&auto=format,compress`}
-                      alt={post.metadata.author.title}
-                      className="w-6 h-6 rounded-full"
-                    />
-                  )}
-                  <span>{post.metadata.author.title}</span>
-                </Link>
+            
+            <div className="p-6">
+              {categories && categories.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {categories.map((category) => (
+                    <span
+                      key={category.id}
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                      style={{
+                        backgroundColor: category.metadata?.color ? `${category.metadata.color}20` : '#f3f4f6',
+                        color: category.metadata?.color || '#374151',
+                      }}
+                    >
+                      {category.title}
+                    </span>
+                  ))}
+                </div>
               )}
 
-              <span>
-                {new Date(post.metadata.publication_date).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric'
-                })}
-              </span>
+              <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
+                <Link href={`/posts/${post.slug}`} className="hover:text-primary-600 transition-colors duration-200">
+                  {post.title}
+                </Link>
+              </h3>
+
+              {metadata.excerpt && (
+                <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                  {metadata.excerpt}
+                </p>
+              )}
+
+              <div className="flex items-center justify-between">
+                {author && (
+                  <div className="flex items-center">
+                    {author.metadata?.profile_picture?.imgix_url && (
+                      <img
+                        src={`${author.metadata.profile_picture.imgix_url}?w=80&h=80&fit=crop&auto=format,compress`}
+                        alt={author.title}
+                        className="w-8 h-8 rounded-full mr-3"
+                      />
+                    )}
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">{author.title}</p>
+                    </div>
+                  </div>
+                )}
+
+                {metadata.publication_date && (
+                  <time className="text-sm text-gray-500">
+                    {new Date(metadata.publication_date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </time>
+                )}
+              </div>
             </div>
-          </div>
-        </article>
-      ))}
+          </article>
+        );
+      }).filter(Boolean)}
     </div>
-  )
+  );
 }
