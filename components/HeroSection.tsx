@@ -45,7 +45,7 @@ export default function HeroSection({ featuredPost }: HeroSectionProps) {
             </span>
           </div>
           
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-white">
             {featuredPost.title}
           </h1>
           
