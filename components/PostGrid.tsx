@@ -16,8 +16,7 @@
                       ))}
                     </div>
                   )}
-// components/PostGrid.tsx
-                  <div className="flex items-center justify-between text-sm text-gray-500">
+                    <div className="flex items-center justify-between text-sm text-gray-500">
                     {post.metadata.author && (
                       <Link
                         href={`/authors/${post.metadata.author.slug}`}
