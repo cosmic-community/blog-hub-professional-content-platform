@@ -16,20 +16,21 @@
                       ))}
                     </div>
                   )}
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                    {post.metadata.author && (
-                      <Link
-                        href={`/authors/${post.metadata.author.slug}`}
-                        className="flex items-center space-x-2 hover:text-gray-700 transition-colors"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {post.metadata.author.metadata.profile_picture && (
-                          <img
-                            src={`${post.metadata.author.metadata.profile_picture.imgix_url}?w=60&h=60&fit=crop&auto=format,compress`}
-                            alt={post.metadata.author.title}
-                            className="w-6 h-6 rounded-full"
-                          />
+                      <div className="flex items-center justify-between text-sm text-gray-500">
+                        {post.metadata.author && (
+                          <Link
+                            href={`/authors/${post.metadata.author.slug}`}
+                            className="flex items-center space-x-2 hover:text-gray-700 transition-colors"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {post.metadata.author.metadata.profile_picture && (
+                              <img
+                                src={`${post.metadata.author.metadata.profile_picture.imgix_url}?w=60&h=60&fit=crop&auto=format,compress`}
+                                alt={post.metadata.author.title}
+                                className="w-6 h-6 rounded-full"
+                              />
+                            )}
+                            <span>{post.metadata.author.title}</span>
+                          </Link>
                         )}
-                        <span>{post.metadata.author.title}</span>
-                      </Link>
-                    )}
+                      </div>
